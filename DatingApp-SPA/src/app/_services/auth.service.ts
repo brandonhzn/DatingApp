@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from "rxjs/operators";
+import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,6 +9,9 @@ export class AuthService {
 
 constructor(private http: HttpClient) { }
 baseUrl = 'http://localhost:5000/api/auth/';
+CursosUrl = 'http://localhost:5000/api/Values/';
+jwtHelper = new JwtHelperService();
+decodedToken : any;
 
 login(model:any){
   
@@ -16,15 +20,30 @@ login(model:any){
     const user = response;
     if(user){
       localStorage.setItem('token',user.token);
+      this.decodedToken = this.jwtHelper.decodeToken(user.token);
+      console.log(this.decodedToken);
     }
   })
   );
 }
 register(model:any){
-  return this.http.post(this.baseUrl+"register",model); //.pipe(
-    //map((response : any) =>{
-     // const code = response;
-   // }));
+  return this.http.post(this.baseUrl+ "register", model).pipe(
+    map((response: any)=>{
+      const resp = response;
+    })
+  );
+  }
+
+  ObtenerCursos(){
+    return this.http.get(this.CursosUrl);
+  }
+  ObtenerPersonasPorCurso(model:any){
+    return this.http.get(this.CursosUrl,model);
+  }
+
+  loggedIn(){
+    const token = localStorage.getItem('token');
+    return !this.jwtHelper.isTokenExpired(token);
   }
 }
 

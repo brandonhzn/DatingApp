@@ -24,26 +24,38 @@ namespace DatingApp.API.Controllers
         // GET api/values
         [HttpGet]  
         [AllowAnonymous]      
-        public async Task<IActionResult> GetValues()
+        public async Task<IActionResult> ObtenerCursos()
         {
-            var values = await _context.Values.ToListAsync();
+            var values = await _context.Cursos.ToListAsync();
             return Ok(values);
         }
 
         // GET api/values/5
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetValue(int id)
-        {
-            var value = await _context.Values.FirstOrDefaultAsync(x => x.Id == id);
-            return Ok(value);
+        public async Task<IActionResult> ObtenerPersonasPorCurso(int id)
+        {          
+            var Value = (from cust in _context.UnionCursoUser
+                                       where cust.Curso.Id == id
+                                       select cust.user);
+            return Ok(Value);
         }
 
         // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+        [AllowAnonymous]        
+        //[HttpPost("Rango")]
+        [HttpGet("{edad}")]
+        public async Task<IActionResult> RangosPorEdades(int edad)
+        {          
+           /* var Value = (from cust in _context.UnionCursoUser
+                                       where (cust.user.FechaNacimiento - DateTime.Now ).TotalDays < edad 
+                                       select cust.user);*/
+            var Value = (from cust in _context.UnionCursoUser
+                                       where cust.Curso.Id == edad
+                                       select cust.user);
+            return Ok(Value);
         }
+
 
         // PUT api/values/5
         [HttpPut("{id}")]

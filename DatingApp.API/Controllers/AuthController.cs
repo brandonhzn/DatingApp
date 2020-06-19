@@ -37,12 +37,19 @@ namespace DatingApp.API.Controllers
 
             if (await _repo.UserExists(userForRegisterDto.Username))
             {
-                return BadRequest("Username already exits");
+                return BadRequest("El usuario ya existe");
             }
 
             var userToCreate = new User
             {
-                Username = userForRegisterDto.Username
+                Username = userForRegisterDto.Username,
+                Nombres = userForRegisterDto.Nombres,
+                Apellidos = userForRegisterDto.Apellidos,
+                FechaNacimiento = userForRegisterDto.FechaNacimiento,
+                LugarNacimiento = userForRegisterDto.LugarNacimiento,
+                LugarResidencia = userForRegisterDto.LugarResidencia,
+                genero = userForRegisterDto.genero,
+                Hobbies = userForRegisterDto.Hobbies
             };
 
             var createdUser = await _repo.Register(userToCreate, userForRegisterDto.Password);
@@ -80,8 +87,7 @@ namespace DatingApp.API.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 return Ok(new{
                     token = tokenHandler.WriteToken(token)
-                });
-            
+                });            
         }
     }
 }

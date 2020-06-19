@@ -39,10 +39,10 @@ namespace DatingApp.API.Data
 
         public async Task<User> Register(User user, string password)
         {
-             byte[] passwordHash, passwordSalt;
+            byte[] passwordHash, passwordSalt;
             CreatePaswwordHash(password, out passwordHash, out passwordSalt);
             user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            user.PasswordSalt = passwordSalt;            
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
